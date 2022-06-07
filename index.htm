@@ -1,0 +1,115 @@
+<html>
+<head>
+	<link id="css" href="css/braille-big.css" rel="stylesheet">
+	<link href="css/demo.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="br.gif">
+    <title>Braille-Tools</title>
+	
+	
+
+	<script src='braille.js'></script>
+	<script language='javascript'>
+		function elem(id){
+			return document.getElementById(id);
+		}
+		function showBraille() {
+			recognition.stop();
+			var message = elem('txtBraille').value;
+			elem('myBraille').innerHTML=br.braille(message);
+			let Text = new SpeechSynthesisUtterance(message);
+			Text.lang = 'en-IN'
+			speechSynthesis.speak(Text);
+		}
+		function BrText() {
+			var message = elem('txtBr').value;
+			elem('myBr').innerHTML=br.braille(message);
+		}
+		function setCSS(size) {
+			elem('css').href='css/braille-'+size+'.css';
+		}
+		
+	</script>
+	
+	
+</head>
+<body>
+
+<div class="main">
+<div>
+
+<h1 class="heading">Braille Converter<hr width="50%"></h1>
+<h1>English to Braille Converter</h1>
+</div>
+<p>2 styles of Braille:
+	<a href="javascript:setCSS('big')">big</a> -  
+	<a href="javascript:setCSS('small')">small</a>
+</p>
+
+
+<name id="braillename"/>
+<div id="out-braille">
+	<h2>Type text to convert it in braille.</h2>
+	
+	<div class="input-braille">         
+		<input id="txtBraille" id="tex" name="txt" class="form-control pull-left" type="textarea" style="width:90vw">
+	<div class="speak-btn">
+		Voice input :
+		<button id="start" class="btn btn-primary pull-left">Start</button>
+    	<button id="stop" class="btn btn-primary pull-left">Stop</button>
+	</div>
+		<input id="btnBraille" type="submit" name="submit" value="Show Braille" maxlength="50" onclick="showBraille()" class="btn btn-primary pull-left">
+
+
+    	
+	</div>
+	
+</div>
+
+<div class="output-braille">
+	<div style="height:20px;width:1px;"></div>
+	<div id="myBraille" class="braille" style="margin-top:30px;min-height:70px;min-width:1px;"></div>
+</div>
+
+</div>
+
+<script>
+document.getElementById("txtBraille")
+    .addEventListener("keyup", function(event) {
+    event.preventDefault();
+    if (event.keyCode === 13) {
+        document.getElementById("btnBraille").click();
+    }
+});
+
+
+</script>
+
+
+
+
+<script>
+	var output = document.getElementById("txtBraille");
+	var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+	var recognition = new SpeechRecognition();
+	recognition.lang = "en-IN";
+	console.log(recognition)
+	recognition.continuous = true;
+	recognition.interimResults = true;
+	recognition.onresult = res =>{
+		text = Array.from(res.results).map(r => r[0]).map(txt => txt.transcript).join("");
+		output.value=text;
+	};
+
+
+	document.querySelector("#start").onclick = () => {
+	recognition.start();
+	};
+	document.querySelector("#stop").onclick = () => {
+	recognition.stop();
+	
+	};
+	
+	
+</script>
+</body>
+</html>
